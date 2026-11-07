@@ -1,0 +1,23 @@
+Algorithm Move_Zeroes(arr, n)
+
+temp[0..n-1] <- empty
+index <- 0
+
+For i <- 0 up to n-1 do
+   If arr[i] <> 0 then
+      temp[index] <- arr[i]
+      index <- index + 1
+   End If
+End For
+
+For i <- index up to n-1 do
+   temp[i] <- 0
+End For
+
+For i <- 0 up to n-1 do
+   arr[i] <- temp[i]
+End For
+
+Print arr
+
+End Algorithm

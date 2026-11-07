@@ -1,0 +1,33 @@
+Algorithm Merge_Sorted(arr1, n1, arr2, n2)
+
+i <- 0
+j <- 0
+k <- 0
+Create merged[n1 + n2]
+
+While i < n1 AND j < n2 do
+   If arr1[i] <= arr2[j] then
+      merged[k] <- arr1[i]
+      i <- i + 1
+   Else
+      merged[k] <- arr2[j]
+      j <- j + 1
+   End If
+   k <- k + 1
+End While
+
+While i < n1 do
+   merged[k] <- arr1[i]
+   i <- i + 1
+   k <- k + 1
+End While
+
+While j < n2 do
+   merged[k] <- arr2[j]
+   j <- j + 1
+   k <- k + 1
+End While
+
+Print merged[0..k-1]
+
+End Algorithm

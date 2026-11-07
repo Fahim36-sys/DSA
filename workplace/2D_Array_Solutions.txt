@@ -1,0 +1,149 @@
+﻿1. Write a pseudocode to calculate the sum of all elements in a 2D array.
+Algorithm Sum_Of_All_Elements(A, r, c)
+    sum <- 0
+
+    For i <- 0 to r-1 do
+        For j <- 0 to c-1 do
+            sum <- sum + A[i][j]
+        End For
+    End For
+
+    Print "Sum of all elements = ", sum
+End Algorithm
+
+2. Write a pseudocode to find the maximum element in a matrix.
+Algorithm Maximum_Element(A, r, c)
+    max <- A[0][0]
+
+    For i <- 0 to r-1 do
+        For j <- 0 to c-1 do
+            If A[i][j] > max then
+                max <- A[i][j]
+            End If
+        End For
+    End For
+
+    Print "Maximum element = ", max
+End Algorithm
+
+3. Write a pseudocode to compute the sum of each row.
+Algorithm Row_Sum(A, r, c)
+    For i <- 0 to r-1 do
+        rowSum <- 0
+
+        For j <- 0 to c-1 do
+            rowSum <- rowSum + A[i][j]
+        End For
+
+        Print "Sum of row ", i, " = ", rowSum
+    End For
+End Algorithm
+
+4. Write a pseudocode to compute the sum of each column.
+Algorithm Column_Sum(A, r, c)
+    For j <- 0 to c-1 do
+        colSum <- 0
+
+        For i <- 0 to r-1 do
+            colSum <- colSum + A[i][j]
+        End For
+
+        Print "Sum of column ", j, " = ", colSum
+    End For
+End Algorithm
+
+5. Write a pseudocode to count the number of even and odd elements in a matrix.
+Algorithm Count_Even_Odd(A, r, c)
+    evenCount <- 0
+    oddCount <- 0
+
+    For i <- 0 to r-1 do
+        For j <- 0 to c-1 do
+            If A[i][j] mod 2 = 0 then
+                evenCount <- evenCount + 1
+            Else
+                oddCount <- oddCount + 1
+            End If
+        End For
+    End For
+
+    Print "Even elements = ", evenCount
+    Print "Odd elements = ", oddCount
+End Algorithm
+
+6. Write a pseudocode to count how many times a specified element appears in the matrix.
+Algorithm Count_Element(A, r, c, key)
+    count <- 0
+
+    For i <- 0 to r-1 do
+        For j <- 0 to c-1 do
+            If A[i][j] = key then
+                count <- count + 1
+            End If
+        End For
+    End For
+
+    Print "Element appears ", count, " times"
+End Algorithm
+
+7. Write a pseudocode to find the sum of the main diagonal elements of a square matrix.
+Algorithm Main_Diagonal_Sum(A, n)
+    diagonalSum <- 0
+
+    For i <- 0 to n-1 do
+        diagonalSum <- diagonalSum + A[i][i]
+    End For
+
+    Print "Sum of main diagonal = ", diagonalSum
+End Algorithm
+
+8. Write a pseudocode to search for a given element and display its row and column position.
+Algorithm Search_Matrix(A, r, c, key)
+    found <- False
+
+    For i <- 0 to r-1 do
+        For j <- 0 to c-1 do
+            If A[i][j] = key then
+                Print "Element found at row ", i, " and column ", j
+                found <- True
+                Break
+            End If
+        End For
+
+        If found = True then
+            Break
+        End If
+    End For
+
+    If found = False then
+        Print "Element not found"
+    End If
+End Algorithm
+
+9. Write a pseudocode to find the transpose of a matrix.
+Algorithm Transpose_Matrix(A, r, c)
+    Create T[c][r]
+
+    For i <- 0 to r-1 do
+        For j <- 0 to c-1 do
+            T[j][i] <- A[i][j]
+        End For
+    End For
+
+    Print T
+End Algorithm
+
+10. Write a pseudocode to find the Largest Element in Each Row.
+Algorithm Largest_Element_In_Each_Row(A, r, c)
+    For i <- 0 to r-1 do
+        largest <- A[i][0]
+
+        For j <- 1 to c-1 do
+            If A[i][j] > largest then
+                largest <- A[i][j]
+            End If
+        End For
+
+        Print "Largest element in row ", i, " = ", largest
+    End For
+End Algorithm

@@ -1,0 +1,22 @@
+Algorithm Binary_Search(arr, target)
+    arr[0..14] <- [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150]
+    left <- 0
+    right <- 14
+    while left <= right do
+        mid <- (left + right) / 2
+
+    Print "Enter the element to search: "
+    Input target
+
+    For i <- 0 to 14 do
+        If arr[mid]=target then
+            Print "Element found at index: ", mid
+            Break
+        Else If arr[mid] < target then
+            left <- mid + 1
+        Else
+            right <- mid - 1
+        End If
+        mid <- (left + right) / 2
+    End For
+End Algorithm

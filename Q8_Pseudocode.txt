@@ -1,0 +1,26 @@
+Algorithm Second_Largest(arr, n)
+
+If n < 2 then
+   Print "No second largest element"
+   Return
+End If
+
+first <- arr[0]
+second <- arr[0]
+
+For i <- 1 up to n-1 do
+   If arr[i] > first then
+      second <- first
+      first <- arr[i]
+   Else If arr[i] > second AND arr[i] <> first then
+      second <- arr[i]
+   End If
+End For
+
+If second = first then
+   Print "No second largest element"
+Else
+   Print second
+End If
+
+End Algorithm

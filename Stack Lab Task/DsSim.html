@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b0d12">
+  <title>Structura — Data Structure Studio</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0b0d12;
+      --surface: #11141c;
+      --surface-2: #171b25;
+      --surface-3: #1d2230;
+      --border: #282e3c;
+      --muted: #858da0;
+      --text: #edf0f7;
+      --cyan: #61e6d3;
+      --cyan-dim: rgba(97, 230, 211, .13);
+      --purple: #a48aff;
+      --pink: #ff7e9f;
+      --yellow: #ffd166;
+      --green: #84e2a8;
+      --radius: 12px;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-synthesis: none;
+      text-rendering: optimizeLegibility;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-width: 760px;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 13px;
+    }
+    button, input, select { font: inherit; }
+    button { color: inherit; }
+    button:focus-visible, input:focus-visible, select:focus-visible {
+      outline: 2px solid var(--cyan);
+      outline-offset: 2px;
+    }
+    .app { display: flex; min-height: 100vh; }
+    .sidebar {
+      width: 230px;
+      flex: 0 0 230px;
+      background: #0e1016;
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      padding: 21px 13px 15px;
+    }
+    .brand { display: flex; align-items: center; gap: 10px; padding: 0 8px 24px; }
+    .brand-mark {
+      width: 34px; height: 34px; border-radius: 10px;
+      display: grid; place-items: center; color: var(--cyan);
+      background: linear-gradient(145deg, #1d3537, #172126);
+      border: 1px solid #2a5452; font-size: 19px; font-weight: 700;
+    }
+    .brand-name { font-size: 15px; font-weight: 680; letter-spacing: -.3px; }
+    .brand-caption { color: var(--muted); font-size: 10px; margin-top: 2px; letter-spacing: .5px; }
+    .nav-label { color: #687083; font-size: 10px; font-weight: 700; letter-spacing: 1.15px; padding: 8px 10px 9px; }
+    .nav-list { display: grid; gap: 4px; }
+    .nav-item {
+      width: 100%; text-align: left; border: 0; background: transparent;
+      color: #a2a9b8; border-radius: 8px; padding: 10px 11px;
+      display: flex; align-items: center; gap: 11px; cursor: pointer;
+      transition: background .16s, color .16s;
+    }
+    .nav-item:hover { background: #171b24; color: var(--text); }
+    .nav-item.active { color: var(--cyan); background: var(--cyan-dim); }
+    .nav-icon { width: 18px; text-align: center; font-size: 15px; }
+    .nav-count { margin-left: auto; font-size: 10px; color: #667082; }
+    .sidebar-bottom { margin-top: auto; }
+    .sidebar-note {
+      padding: 13px; border: 1px solid var(--border); border-radius: 10px;
+      background: linear-gradient(140deg, #151a22, #11141b);
+    }
+    .note-title { color: #d9deea; font-size: 11px; font-weight: 650; }
+    .note-copy { color: var(--muted); font-size: 10px; line-height: 1.55; margin: 6px 0 10px; }
+    .keycap { border: 1px solid #333a4a; color: #9ca5b8; border-radius: 4px; padding: 2px 5px; font-size: 9px; }
+    .main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+    .topbar {
+      height: 64px; flex: 0 0 64px; border-bottom: 1px solid var(--border);
+      padding: 0 27px; display: flex; align-items: center; justify-content: space-between;
+      background: rgba(15, 17, 24, .72);
+    }
+    .breadcrumbs { color: var(--muted); font-size: 12px; }
+    .breadcrumbs strong { color: #e8ebf3; font-weight: 600; }
+    .topbar-right { display: flex; gap: 10px; align-items: center; }
+    .status { display: flex; align-items: center; gap: 7px; color: #9aa3b5; font-size: 11px; }
+    .status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); box-shadow: 0 0 9px #84e2a866; }
+    .icon-button, .button {
+      border: 1px solid var(--border); background: var(--surface-2); border-radius: 8px;
+      padding: 8px 11px; cursor: pointer; transition: .15s;
+    }
+    .icon-button { padding: 7px 10px; color: #aeb6c5; }
+    .icon-button:hover, .button:hover { border-color: #465064; background: #202633; }
+    .button.primary { border-color: #55cbbb; background: var(--cyan); color: #071311; font-weight: 700; }
+    .button.primary:hover { background: #8af0e3; }
+    .button.small { padding: 7px 10px; font-size: 11px; }
+    .button.ghost { background: transparent; color: #b6bece; }
+    .content { width: 100%; max-width: 1550px; margin: 0 auto; padding: 27px 30px 35px; }
+    .page-heading { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 22px; }
+    .eyebrow { color: var(--cyan); font-size: 10px; text-transform: uppercase; letter-spacing: 1.4px; font-weight: 700; margin-bottom: 8px; }
+    h1 { font-size: 25px; letter-spacing: -.7px; margin: 0; font-weight: 650; }
+    .subtitle { color: var(--muted); font-size: 12px; margin-top: 7px; }
+    .page-actions { display: flex; gap: 8px; }
+    .workspace { display: grid; grid-template-columns: minmax(0, 1fr) 286px; gap: 17px; align-items: start; }
+    .left-column { min-width: 0; display: grid; gap: 15px; }
+    .panel {
+      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .panel-heading {
+      min-height: 54px; border-bottom: 1px solid var(--border); padding: 0 17px;
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    }
+    .panel-title { font-size: 12px; font-weight: 650; }
+    .panel-subtitle { color: var(--muted); font-size: 10px; margin-top: 4px; }
+    .panel-body { padding: 16px 17px; }
+    .mode-tabs { display: inline-flex; gap: 3px; padding: 3px; border: 1px solid var(--border); background: #0d1016; border-radius: 8px; }
+    .mode-tab {
+      padding: 6px 10px; border: 0; border-radius: 6px; background: transparent;
+      color: #8992a5; font-size: 10px; cursor: pointer;
+    }
+    .mode-tab.active { color: var(--text); background: #252b38; }
+    .canvas-wrap {
+      min-height: 295px; padding: 19px 15px 13px; overflow-x: auto;
+      background-image: radial-gradient(#303646 0.65px, transparent .65px);
+      background-size: 17px 17px; position: relative;
+    }
+    .canvas-meta { display: flex; justify-content: space-between; color: #7d8799; font-size: 10px; margin: 0 3px 23px; }
+    .array-stage { min-width: 520px; height: 190px; display: flex; align-items: flex-end; justify-content: center; gap: 7px; padding: 0 9px 24px; position: relative; }
+    .array-cell {
+      height: var(--bar-height); flex: 1; min-width: 26px; max-width: 61px;
+      display: flex; flex-direction: column; justify-content: flex-end; align-items: center;
+      position: relative; transition: height .25s ease, transform .25s ease, background .2s, border-color .2s;
+    }
+    .array-bar {
+      width: 100%; min-height: 19px; height: calc(100% - 21px); display: grid; place-items: center;
+      border: 1px solid #376a72; border-radius: 6px 6px 3px 3px;
+      background: linear-gradient(180deg, #285258, #19363d); color: #baf7ed;
+      font: 600 12px ui-monospace, SFMono-Regular, Consolas, monospace;
+      box-shadow: inset 0 1px #ffffff0b;
+      transition: background .2s, border-color .2s, transform .2s, box-shadow .2s;
+    }
+    .array-index { position: absolute; bottom: -19px; color: #737d90; font: 10px ui-monospace, monospace; }
+    .array-cell.compare .array-bar { background: linear-gradient(180deg, #66552b, #393219); border-color: #a38940; color: #ffe8a6; transform: translateY(-4px); }
+    .array-cell.active .array-bar { background: linear-gradient(180deg, #69405a, #3c293e); border-color: #bd6e9a; color: #ffd4e6; box-shadow: 0 0 18px #ee79b322; transform: translateY(-7px); }
+    .array-cell.sorted .array-bar { background: linear-gradient(180deg, #27604f, #193b36); border-color: #4aa886; color: #bbf5d6; }
+    .array-cell.found .array-bar { background: linear-gradient(180deg, #317465, #194c46); border-color: var(--cyan); color: white; box-shadow: 0 0 20px #61e6d355; transform: translateY(-7px); }
+    .array-cell.inserted .array-bar { animation: pop-in .38s ease; }
+    @keyframes pop-in { 0% { transform: scale(.65) translateY(10px); opacity: .3; } 100% { transform: scale(1) translateY(0); opacity: 1; } }
+    .empty-state { color: #7f899b; text-align: center; margin: 80px 0; font-size: 12px; }
+    .legend { display: flex; justify-content: center; gap: 18px; color: #818a9b; font-size: 10px; }
+    .legend-item { display: flex; align-items: center; gap: 6px; }
+    .legend-swatch { width: 8px; height: 8px; border-radius: 2px; background: #346069; }
+    .legend-swatch.compare { background: #a38940; }
+    .legend-swatch.active { background: #bd6e9a; }
+    .legend-swatch.sorted { background: #4aa886; }
+    .control-panel .panel-body { padding: 15px 17px; }
+    .control-row { display: flex; align-items: flex-end; gap: 9px; flex-wrap: wrap; }
+    .field { display: grid; gap: 6px; }
+    .field label { color: #9099ab; font-size: 10px; }
+    .field input, .field select {
+      height: 34px; color: #e9edf5; border: 1px solid #303746; border-radius: 7px;
+      padding: 0 9px; background: #0d1016; outline: none; min-width: 85px;
+    }
+    .field input:focus, .field select:focus { border-color: #4cb7aa; }
+    .field input[type="number"] { width: 88px; }
+    .field select { min-width: 145px; }
+    .control-divider { width: 1px; height: 32px; background: var(--border); margin: 0 3px; }
+    .control-note { color: #737d90; font-size: 10px; margin-top: 12px; min-height: 14px; }
+    .transport { display: flex; align-items: center; gap: 7px; margin-left: auto; }
+    .transport .button { min-width: 34px; height: 33px; display: grid; place-items: center; padding: 0 9px; }
+    .transport .button.play { min-width: 72px; }
+    .speed { color: #8d96a8; font-size: 10px; display: flex; align-items: center; gap: 7px; }
+    input[type="range"] { width: 75px; accent-color: var(--cyan); }
+    .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 9px; }
+    .stat-card { background: #151922; border: 1px solid #272e3a; border-radius: 9px; padding: 12px; }
+    .stat-label { color: #8892a5; font-size: 10px; }
+    .stat-value { font: 600 18px ui-monospace, monospace; margin-top: 7px; }
+    .stat-hint { color: #6f798b; font-size: 9px; margin-top: 3px; }
+    .right-column { display: grid; gap: 15px; }
+    .complexity-card { padding: 14px 15px; border-bottom: 1px solid var(--border); }
+    .complexity-card:last-child { border-bottom: 0; }
+    .complexity-name { color: #dce1ec; font-size: 11px; font-weight: 600; }
+    .complexity-values { display: flex; gap: 18px; margin-top: 10px; }
+    .complexity-value { color: var(--cyan); font: 11px ui-monospace, monospace; }
+    .complexity-value span { display: block; color: #747e91; font: 9px system-ui, sans-serif; margin-bottom: 4px; }
+    .log { display: grid; gap: 0; max-height: 206px; overflow: auto; }
+    .log-entry { padding: 10px 14px; display: flex; gap: 9px; border-bottom: 1px solid #222733; color: #aeb6c5; font-size: 10px; line-height: 1.45; }
+    .log-entry:last-child { border: 0; }
+    .log-number { color: #687286; font: 10px ui-monospace, monospace; }
+    .log-entry.current { color: #dcf8f2; background: #14201f; }
+    .log-empty { color: #768094; text-align: center; padding: 19px 10px; font-size: 10px; }
+    .structure-stage {
+      min-height: 264px; padding: 28px 20px; display: flex; align-items: center;
+      justify-content: center; gap: 10px; overflow: auto; background-image: radial-gradient(#303646 0.65px, transparent .65px); background-size: 17px 17px;
+    }
+    .node-box { display: flex; align-items: center; gap: 9px; flex: 0 0 auto; }
+    .node {
+      min-width: 55px; padding: 13px 14px; text-align: center; border: 1px solid #376a72;
+      border-radius: 9px; background: linear-gradient(145deg, #21484e, #162e36);
+      color: #c5f7ef; font: 600 13px ui-monospace, monospace; box-shadow: 0 5px 16px #0004;
+    }
+    .node small { display: block; color: #819ba1; font: 9px system-ui, sans-serif; margin-top: 4px; }
+    .node-arrow { color: var(--cyan); font-size: 19px; }
+    .stack-stage { min-height: 275px; display: flex; flex-direction: column-reverse; align-items: center; justify-content: flex-start; gap: 5px; padding: 19px; overflow: auto; }
+    .stack-item { width: min(250px, 85%); height: 38px; flex: 0 0 38px; border: 1px solid #426d77; border-radius: 6px; background: linear-gradient(90deg, #21454b, #19333b); color: #c6f4ee; display: grid; place-items: center; font: 600 12px ui-monospace, monospace; animation: pop-in .25s ease; }
+    .stack-base { width: min(280px, 90%); border-top: 2px solid #788394; text-align: center; color: #737d90; padding-top: 7px; font-size: 9px; }
+    .tree-svg { width: 100%; height: 275px; min-width: 420px; }
+    .tree-edge { stroke: #536076; stroke-width: 1.5; }
+    .tree-node circle { fill: #1b4247; stroke: #61b9ad; stroke-width: 1.5; }
+    .tree-node text { fill: #d9fff8; font: 12px ui-monospace, monospace; text-anchor: middle; dominant-baseline: central; }
+    .tree-node.found circle { stroke: var(--yellow); fill: #564829; }
+    .notice { position: fixed; bottom: 20px; left: 50%; transform: translate(-50%, 15px); opacity: 0; pointer-events: none; padding: 10px 14px; border-radius: 8px; border: 1px solid #3c756c; background: #142522; color: #d4fff2; box-shadow: 0 8px 30px #0007; font-size: 11px; transition: .2s; z-index: 20; }
+    .notice.show { opacity: 1; transform: translate(-50%, 0); }
+    .hidden { display: none !important; }
+    @media (max-width: 1080px) {
+      .sidebar { width: 190px; flex-basis: 190px; }
+      .content { padding: 22px 18px; }
+      .workspace { grid-template-columns: minmax(0, 1fr) 245px; gap: 12px; }
+      .transport { margin-left: 0; }
+    }
+    @media (max-width: 850px) {
+      body { min-width: 360px; }
+      .sidebar { width: 58px; flex-basis: 58px; padding: 16px 7px; }
+      .brand { padding: 0 5px 22px; }
+      .brand-copy, .nav-label, .nav-item span:not(.nav-icon), .sidebar-note { display: none; }
+      .nav-item { justify-content: center; padding: 11px 5px; }
+      .nav-icon { width: auto; }
+      .topbar { padding: 0 15px; }
+      .content { padding: 20px 14px; }
+      .workspace { grid-template-columns: 1fr; }
+      .right-column { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">∑</div>
+        <div class="brand-copy"><div class="brand-name">structura</div><div class="brand-caption">ALGORITHM STUDIO</div></div>
+      </div>
+      <div class="nav-label">DATA STRUCTURES</div>
+      <nav class="nav-list" aria-label="Data structures">
+        <button class="nav-item active" data-structure="array"><span class="nav-icon">▦</span><span>Array</span><span class="nav-count">01</span></button>
+        <button class="nav-item" data-structure="stack"><span class="nav-icon">▤</span><span>Stack</span><span class="nav-count">02</span></button>
+        <button class="nav-item" data-structure="queue"><span class="nav-icon">⇥</span><span>Queue</span><span class="nav-count">03</span></button>
+        <button class="nav-item" data-structure="linked"><span class="nav-icon">⊙</span><span>Linked list</span><span class="nav-count">04</span></button>
+        <button class="nav-item" data-structure="tree"><span class="nav-icon">⑂</span><span>Binary search tree</span><span class="nav-count">05</span></button>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="sidebar-note">
+          <div class="note-title">A little shortcut</div>
+          <div class="note-copy">Press <span class="keycap">Space</span> to play or pause an algorithm animation.</div>
+          <span class="keycap">ESC</span> <span class="note-copy">to stop</span>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="breadcrumbs">Workspace <span style="color:#454d5b">/</span> <strong id="crumb">Array</strong></div>
+        <div class="topbar-right"><div class="status"><span class="status-dot"></span><span>Ready to explore</span></div><button class="icon-button" id="resetAll" title="Reset current structure" aria-label="Reset current structure">↺</button></div>
+      </header>
+      <div class="content">
+        <section class="page-heading">
+          <div><div class="eyebrow" id="eyebrow">01 — SEQUENTIAL STRUCTURE</div><h1 id="pageTitle">Array playground</h1><div class="subtitle" id="pageSubtitle">Build, search, sort, and explore an array one step at a time.</div></div>
+          <div class="page-actions"><button class="button ghost small" id="shuffleBtn">⤨ &nbsp;Randomize</button><button class="button primary small" id="newValueBtn">＋ &nbsp;Add value</button></div>
+        </section>
+
+        <div class="workspace">
+          <div class="left-column">
+            <section class="panel">
+              <div class="panel-heading">
+                <div><div class="panel-title">Visualization</div><div class="panel-subtitle" id="vizSubtitle">Array · index-based access · 8 elements</div></div>
+                <div class="mode-tabs" id="arrayTabs" role="tablist" aria-label="Array mode">
+                  <button class="mode-tab active" data-mode="operations">Operations</button><button class="mode-tab" data-mode="sorting">Sorting</button><button class="mode-tab" data-mode="searching">Searching</button>
+                </div>
+              </div>
+              <div class="canvas-wrap" id="arrayCanvas">
+                <div class="canvas-meta"><span id="canvasLeft">INDEX →</span><span id="canvasRight">LENGTH: 8</span></div>
+                <div class="array-stage" id="arrayStage" aria-live="polite"></div>
+                <div class="legend"><span class="legend-item"><i class="legend-swatch"></i>Unsorted</span><span class="legend-item"><i class="legend-swatch compare"></i>Compare</span><span class="legend-item"><i class="legend-swatch active"></i>Active</span><span class="legend-item"><i class="legend-swatch sorted"></i>Sorted</span></div>
+              </div>
+              <div class="structure-stage hidden" id="structureStage"></div>
+            </section>
+
+            <section class="panel control-panel">
+              <div class="panel-heading"><div><div class="panel-title" id="controlTitle">Array operations</div><div class="panel-subtitle" id="controlSubtitle">Insert or remove an element at any index</div></div><span class="keycap" id="modeBadge">MANUAL</span></div>
+              <div class="panel-body" id="controlBody"></div>
+            </section>
+          </div>
+
+          <aside class="right-column">
+            <section class="panel">
+              <div class="panel-heading"><div><div class="panel-title">Complexity</div><div class="panel-subtitle">Time &amp; space at a glance</div></div></div>
+              <div id="complexity"></div>
+            </section>
+            <section class="panel">
+              <div class="panel-heading"><div><div class="panel-title">Step history</div><div class="panel-subtitle" id="stepCount">0 operations</div></div><button class="icon-button" id="clearLog" title="Clear history">⌫</button></div>
+              <div class="log" id="log"><div class="log-empty">Your steps will appear here as you explore.</div></div>
+            </section>
+            <section class="panel">
+              <div class="panel-heading"><div><div class="panel-title">Quick facts</div><div class="panel-subtitle">About this structure</div></div></div>
+              <div class="stats-grid panel-body" id="stats"></div>
+            </section>
+          </aside>
+        </div>
+      </div>
+    </main>
+  </div>
+  <div class="notice" id="notice" role="status"></div>
+
+  <script>
+    (() => {
+      const $ = (selector) => document.querySelector(selector);
+      const $$ = (selector) => [...document.querySelectorAll(selector)];
+      const initialArray = [42, 18, 67, 29, 85, 11, 53, 36];
+      let array = [...initialArray];
+      let structure = "array";
+      let mode = "operations";
+      let algorithm = null;
+      let frames = [];
+      let frameIndex = -1;
+      let timer = null;
+      let delay = 650;
+      let logEntries = [];
+      let stack = [14, 27, 38];
+      let queue = [12, 24, 36];
+      let linked = [8, 17, 23, 41];
+      let treeValues = [42, 21, 68, 11, 32, 57, 84];
+      let treeFound = null;
+      let noticeTimer = null;
+
+      const configs = {
+        array: { title: "Array playground", subtitle: "Build, search, sort, and explore an array one step at a time.", eyebrow: "01 — SEQUENTIAL STRUCTURE", control: "Array operations", description: "Insert or remove an element at any index", complexity: [["Access", "O(1)", "Search", "O(n)"], ["Insert", "O(n)", "Delete", "O(n)"]], facts: [["Length", () => array.length], ["Capacity", () => "Dynamic"], ["First", () => array.length ? array[0] : "—"], ["Last", () => array.length ? array[array.length - 1] : "—"]] },
+        stack: { title: "Stack playground", subtitle: "Explore last-in, first-out behavior with push and pop.", eyebrow: "02 — LIFO STRUCTURE", control: "Stack operations", description: "Add to the top or remove the most recent value", complexity: [["Push", "O(1)", "Pop", "O(1)"], ["Peek", "O(1)", "Search", "O(n)"]], facts: [["Elements", () => stack.length], ["Top", () => stack.length ? stack[stack.length - 1] : "—"], ["Rule", () => "LIFO"], ["Empty", () => stack.length === 0 ? "Yes" : "No"]] },
+        queue: { title: "Queue playground", subtitle: "See first-in, first-out behavior with enqueue and dequeue.", eyebrow: "03 — FIFO STRUCTURE", control: "Queue operations", description: "Join at the rear or leave from the front", complexity: [["Enqueue", "O(1)", "Dequeue", "O(1)"], ["Front", "O(1)", "Search", "O(n)"]], facts: [["Elements", () => queue.length], ["Front", () => queue.length ? queue[0] : "—"], ["Rear", () => queue.length ? queue[queue.length - 1] : "—"], ["Rule", () => "FIFO"]] },
+        linked: { title: "Linked list playground", subtitle: "Follow the pointers through a flexible chain of nodes.", eyebrow: "04 — POINTER STRUCTURE", control: "Linked-list operations", description: "Insert and remove nodes by position", complexity: [["Access", "O(n)", "Search", "O(n)"], ["Insert", "O(1)*", "Delete", "O(1)*"]], facts: [["Nodes", () => linked.length], ["Head", () => linked.length ? linked[0] : "—"], ["Tail", () => linked.length ? linked[linked.length - 1] : "—"], ["Memory", () => "Non-contiguous"]] },
+        tree: { title: "Binary search tree", subtitle: "Insert, find, and traverse values in an ordered tree.", eyebrow: "05 — HIERARCHICAL STRUCTURE", control: "Tree operations", description: "Add values, search, or walk the tree", complexity: [["Insert", "O(log n)*", "Search", "O(log n)*"], ["Min / max", "O(log n)*", "Space", "O(n)"]], facts: [["Nodes", () => treeValues.length], ["Root", () => treeValues.length ? treeValues[0] : "—"], ["Height", () => treeHeight(buildTree())], ["Ordering", () => "Left < Root"]] }
+      };
+
+      function escapeHtml(value) {
+        return String(value).replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
+      }
+
+      function notify(message) {
+        const el = $("#notice");
+        el.textContent = message;
+        el.classList.add("show");
+        clearTimeout(noticeTimer);
+        noticeTimer = setTimeout(() => el.classList.remove("show"), 2100);
+      }
+
+      function addLog(message, current = false) {
+        logEntries.unshift({ message, current });
+        logEntries = logEntries.slice(0, 30);
+        renderLog();
+      }
+
+      function renderLog() {
+        const log = $("#log");
+        $("#stepCount").textContent = `${logEntries.length} ${logEntries.length === 1 ? "operation" : "operations"}`;
+        log.innerHTML = logEntries.length ? logEntries.map((entry, i) =>
+          `<div class="log-entry ${entry.current ? "current" : ""}"><span class="log-number">${String(logEntries.length - i).padStart(2, "0")}</span><span>${escapeHtml(entry.message)}</span></div>`
+        ).join("") : '<div class="log-empty">Your steps will appear here as you explore.</div>';
+      }
+
+      function renderStats() {
+        const cfg = configs[structure];
+        $("#stats").innerHTML = cfg.facts.map(([label, value]) =>
+          `<div class="stat-card"><div class="stat-label">${label}</div><div class="stat-value">${escapeHtml(value())}</div></div>`
+        ).join("");
+      }
+
+      function renderComplexity() {
+        const cfg = configs[structure];
+        $("#complexity").innerHTML = cfg.complexity.map((row) =>
+          `<div class="complexity-card"><div class="complexity-name">${row[0]} <span style="float:right;color:#c5ccda;font:11px ui-monospace,monospace">${row[1]}</span></div><div style="height:10px"></div><div class="complexity-name">${row[2]} <span style="float:right;color:#c5ccda;font:11px ui-monospace,monospace">${row[3]}</span></div></div>`
+        ).join("");
+      }
+
+      function renderArray(highlights = {}, values = array) {
+        const stage = $("#arrayStage");
+        if (!values.length) {
+          stage.innerHTML = '<div class="empty-state">This array is empty. Add a value to get started.</div>';
+        } else {
+          const max = Math.max(...values, 1);
+          stage.innerHTML = values.map((value, i) => {
+            const classes = ["array-cell"];
+            if (highlights.compare?.includes(i)) classes.push("compare");
+            if (highlights.active?.includes(i)) classes.push("active");
+            if (highlights.sorted?.includes(i)) classes.push("sorted");
+            if (highlights.found?.includes(i)) classes.push("found");
+            if (highlights.inserted?.includes(i)) classes.push("inserted");
+            const height = 50 + (Math.abs(value) / max) * 105;
+            return `<div class="${classes.join(" ")}" style="--bar-height:${height}px"><div class="array-bar">${escapeHtml(value)}</div><span class="array-index">${i}</span></div>`;
+          }).join("");
+        }
+        $("#canvasRight").textContent = `LENGTH: ${array.length}`;
+        $("#vizSubtitle").textContent = `Array · index-based access · ${array.length} ${array.length === 1 ? "element" : "elements"}`;
+        renderStats();
+      }
+
+      function stopAnimation() {
+        if (timer) clearInterval(timer);
+        timer = null;
+        const play = $("#playBtn");
+        if (play) play.textContent = "▶ Play";
+      }
+
+      function updateFrame() {
+        if (frameIndex < 0 || !frames[frameIndex]) return;
+        const frame = frames[frameIndex];
+        const isSearch = algorithm === "linear" || algorithm === "binary";
+        if (!isSearch) array = [...frame.array];
+        let highlights = frame.highlights;
+        let visibleValues = isSearch ? frame.array : array;
+        let message = frame.message;
+        if (isSearch && frameIndex === frames.length - 1) {
+          if (algorithm === "binary") {
+            const sortedIndex = frame.highlights.found?.[0];
+            const foundValue = sortedIndex === undefined ? null : frame.array[sortedIndex];
+            const originalIndex = foundValue === null ? -1 : array.indexOf(foundValue);
+            highlights = originalIndex >= 0 ? { found: [originalIndex] } : {};
+            if (originalIndex >= 0) message = `Found ${foundValue} at original index ${originalIndex} (sorted-copy index ${sortedIndex}).`;
+          }
+          visibleValues = array;
+        }
+        renderArray(highlights, visibleValues);
+        $("#controlNote").textContent = message;
+        addLog(message, true);
+        if (frameIndex >= frames.length - 1) {
+          stopAnimation();
+          $("#controlNote").textContent = `${message} · Complete`;
+        }
+      }
+
+      function stepForward() {
+        if (!frames.length) return;
+        if (frameIndex < frames.length - 1) { frameIndex++; updateFrame(); }
+      }
+
+      function playAnimation() {
+        if (!frames.length) return;
+        if (frameIndex >= frames.length - 1) frameIndex = -1;
+        if (timer) { stopAnimation(); return; }
+        $("#playBtn").textContent = "❚❚ Pause";
+        timer = setInterval(() => {
+          if (frameIndex >= frames.length - 1) { stopAnimation(); return; }
+          stepForward();
+        }, delay);
+        if (frameIndex < 0) stepForward();
+      }
+
+      function beginAnimation(steps, type, description) {
+        stopAnimation();
+        if (!steps.length) { notify("There are no steps to animate."); return; }
+        frames = steps;
+        frameIndex = -1;
+        algorithm = type;
+        $("#controlTitle").textContent = description;
+        $("#controlSubtitle").textContent = `${steps.length} steps · use play, pause, or step`;
+        $("#modeBadge").textContent = "ANIMATION";
+        renderControls();
+        $("#controlNote").textContent = `Ready · ${steps.length} steps queued`;
+        addLog(`${description} started`);
+      }
+
+      function createSortFrames(type) {
+        const working = [...array];
+        const framesOut = [];
+        const push = (message, compare = [], active = [], sorted = []) => framesOut.push({ array: [...working], message, highlights: { compare, active, sorted } });
+        const done = [];
+        if (type === "bubble") {
+          for (let end = working.length - 1; end > 0; end--) {
+            let swapped = false;
+            for (let i = 0; i < end; i++) {
+              push(`Compare index ${i} (${working[i]}) with ${i + 1} (${working[i + 1]}).`, [i, i + 1], [], done);
+              if (working[i] > working[i + 1]) {
+                [working[i], working[i + 1]] = [working[i + 1], working[i]];
+                swapped = true;
+                push(`Swap ${working[i + 1]} and ${working[i]}; the larger value moves right.`, [], [i, i + 1], done);
+              }
+            }
+            done.unshift(end);
+            push(`Index ${end} is in its final position.`, [], [], done);
+            if (!swapped) break;
+          }
+        } else if (type === "selection") {
+          for (let start = 0; start < working.length - 1; start++) {
+            let min = start;
+            for (let i = start + 1; i < working.length; i++) {
+              push(`Check whether ${working[i]} at index ${i} is smaller than ${working[min]}.`, [i, min], [start], done);
+              if (working[i] < working[min]) min = i;
+            }
+            if (min !== start) {
+              [working[start], working[min]] = [working[min], working[start]];
+              push(`Place the minimum (${working[start]}) at index ${start}.`, [], [start, min], done);
+            } else push(`${working[start]} is already the minimum for this position.`, [], [start], done);
+            done.push(start);
+          }
+        } else {
+          for (let i = 1; i < working.length; i++) {
+            const current = working[i];
+            let j = i - 1;
+            push(`Pick up ${current} at index ${i} and find its place in the sorted portion.`, [], [i], done);
+            while (j >= 0) {
+              push(`Compare ${working[j]} with ${current}.`, [j], [i], done);
+              if (working[j] <= current) break;
+              working[j + 1] = working[j];
+              push(`Shift ${working[j]} one position to the right.`, [], [j, j + 1], done);
+              j--;
+            }
+            working[j + 1] = current;
+            done.push(i);
+            push(`Insert ${current} at index ${j + 1}.`, [], [j + 1], done);
+          }
+        }
+        framesOut.push({ array: [...working], message: "Array sorted in ascending order.", highlights: { sorted: working.map((_, i) => i) } });
+        return framesOut;
+      }
+
+      function createSearchFrames(type, target) {
+        const source = [...array];
+        const framesOut = [];
+        if (type === "binary") {
+          source.sort((a, b) => a - b);
+          let low = 0, high = source.length - 1, found = -1;
+          framesOut.push({ array: source, message: "Binary search needs sorted data; values are sorted for this search.", highlights: {} });
+          while (low <= high) {
+            const mid = Math.floor((low + high) / 2);
+            framesOut.push({ array: source, message: `Check middle index ${mid}: ${source[mid]} against ${target}.`, highlights: { compare: [low, high], active: [mid] } });
+            if (source[mid] === target) { found = mid; framesOut.push({ array: source, message: `Found ${target} at index ${mid}.`, highlights: { found: [mid] } }); break; }
+            if (source[mid] < target) {
+              low = mid + 1;
+              framesOut.push({ array: source, message: `${source[mid]} is smaller; continue in the right half.`, highlights: { compare: [low, high] } });
+            } else {
+              high = mid - 1;
+              framesOut.push({ array: source, message: `${source[mid]} is larger; continue in the left half.`, highlights: { compare: [low, high] } });
+            }
+          }
+          if (found < 0) framesOut.push({ array: source, message: `${target} is not in this array.`, highlights: {} });
+        } else {
+          let found = -1;
+          source.forEach((value, i) => {
+            if (found >= 0) return;
+            framesOut.push({ array: source, message: `Check index ${i}: is ${value} equal to ${target}?`, highlights: { active: [i] } });
+            if (value === target) {
+              found = i;
+              framesOut.push({ array: source, message: `Found ${target} at index ${i}.`, highlights: { found: [i] } });
+            } else framesOut.push({ array: source, message: `${value} does not match; move to the next index.`, highlights: { compare: [i] } });
+          });
+          if (found < 0) framesOut.push({ array: source, message: `${target} is not in this array.`, highlights: {} });
+        }
+        return framesOut;
+      }
+
+      function arrayControlsHtml() {
+        if (algorithm) {
+          return `<div class="control-row"><div class="transport"><button class="button" id="stepBackBtn" title="Previous step">‹</button><button class="button play" id="playBtn">▶ Play</button><button class="button" id="stepBtn" title="Next step">Step ›</button><button class="button" id="stopBtn" title="Stop and reset">↺</button></div><div class="speed"><span>Speed</span><input type="range" id="speedRange" min="1" max="10" value="${Math.round(11 - delay / 100)}" aria-label="Animation speed"><span id="speedLabel">${(1000 / delay).toFixed(1)}×</span></div></div><div class="control-note" id="controlNote">Ready to animate</div>`;
+        }
+        if (mode === "sorting") {
+          return `<div class="control-row"><div class="field"><label for="sortAlgorithm">SORTING ALGORITHM</label><select id="sortAlgorithm"><option value="insertion">Insertion sort</option><option value="bubble">Bubble sort</option><option value="selection">Selection sort</option></select></div><button class="button primary small" id="runSort">▶ &nbsp;Visualize sort</button><div class="transport"><button class="button small" id="randomizeSmall">⤨ Randomize data</button></div></div><div class="control-note" id="controlNote">Choose an algorithm to see how it works, one comparison at a time.</div>`;
+        }
+        if (mode === "searching") {
+          return `<div class="control-row"><div class="field"><label for="searchAlgorithm">SEARCH ALGORITHM</label><select id="searchAlgorithm"><option value="linear">Linear search · O(n)</option><option value="binary">Binary search · O(log n)</option></select></div><div class="field"><label for="searchValue">TARGET VALUE</label><input id="searchValue" type="number" value="29"></div><button class="button primary small" id="runSearch">⌕ &nbsp;Find value</button></div><div class="control-note" id="controlNote">Linear search works on any array. Binary search sorts a copy first.</div>`;
+        }
+        return `<div class="control-row"><div class="field"><label for="insertValue">VALUE</label><input id="insertValue" type="number" value="64"></div><div class="field"><label for="insertIndex">INDEX</label><input id="insertIndex" type="number" min="0" max="${array.length}" value="${array.length}"></div><button class="button primary small" id="insertBtn">＋ &nbsp;Insert</button><div class="control-divider"></div><div class="field"><label for="deleteIndex">DELETE AT INDEX</label><input id="deleteIndex" type="number" min="0" max="${Math.max(0, array.length - 1)}" value="0"></div><button class="button small" id="deleteBtn">− &nbsp;Delete</button></div><div class="control-note" id="controlNote">Array indices start at 0. Insertion and deletion shift later elements.</div>`;
+      }
+
+      function otherControlsHtml() {
+        if (structure === "stack" || structure === "queue") {
+          const isStack = structure === "stack";
+          return `<div class="control-row"><div class="field"><label for="structureValue">VALUE</label><input id="structureValue" type="number" value="50"></div><button class="button primary small" id="addStructure">${isStack ? "↑ &nbsp;Push" : "＋ &nbsp;Enqueue"}</button><button class="button small" id="removeStructure">${isStack ? "↓ &nbsp;Pop" : "− &nbsp;Dequeue"}</button><button class="button ghost small" id="peekStructure">${isStack ? "◉ &nbsp;Peek" : "◉ &nbsp;Front"}</button></div><div class="control-note" id="controlNote">${isStack ? "The top of the stack is shown at the top. Last in, first out." : "Items enter at the rear and leave from the front. First in, first out."}</div>`;
+        }
+        if (structure === "linked") {
+          return `<div class="control-row"><div class="field"><label for="structureValue">VALUE</label><input id="structureValue" type="number" value="50"></div><div class="field"><label for="nodeIndex">INDEX</label><input id="nodeIndex" type="number" min="0" max="${linked.length}" value="${linked.length}"></div><button class="button primary small" id="addStructure">＋ &nbsp;Insert node</button><button class="button small" id="removeStructure">− &nbsp;Delete node</button><button class="button ghost small" id="reverseList">⇄ &nbsp;Reverse</button></div><div class="control-note" id="controlNote">Each node stores a value and a pointer to the next node.</div>`;
+        }
+        return `<div class="control-row"><div class="field"><label for="structureValue">VALUE</label><input id="structureValue" type="number" value="50"></div><button class="button primary small" id="addStructure">＋ &nbsp;Insert value</button><button class="button small" id="removeStructure">− &nbsp;Remove root value</button><button class="button ghost small" id="traverseTree">⇢ &nbsp;In-order traversal</button></div><div class="control-row" style="margin-top:12px"><div class="field"><label for="treeSearch">SEARCH VALUE</label><input id="treeSearch" type="number" value="32"></div><button class="button ghost small" id="searchTree">⌕ &nbsp;Search tree</button><span class="control-note" id="controlNote">Left child values are smaller; right child values are larger.</span></div>`;
+      }
+
+      function renderControls() {
+        $("#controlBody").innerHTML = structure === "array" ? arrayControlsHtml() : otherControlsHtml();
+        attachControlEvents();
+      }
+
+      function renderStructure() {
+        const stage = $("#structureStage");
+        stage.className = `structure-stage${structure === "stack" ? " stack-stage" : ""}`;
+        if (structure === "stack") {
+          stage.innerHTML = stack.length ? `${stack.map((value, i) => `<div class="stack-item">${escapeHtml(value)}${i === stack.length - 1 ? " · TOP" : ""}</div>`).join("")}<div class="stack-base">STACK BASE</div>` : '<div class="empty-state">Stack is empty. Push a value to begin.</div>';
+        } else if (structure === "queue") {
+          stage.innerHTML = queue.length ? `<div style="display:flex;align-items:center;gap:12px;min-width:max-content"><span style="color:#8f9aad;font-size:10px">FRONT</span><span style="color:var(--cyan);font-size:19px">→</span>${queue.map((value) => `<div class="node">${escapeHtml(value)}</div><span class="node-arrow">→</span>`).join("")}<span style="color:#8f9aad;font-size:10px">REAR</span></div>` : '<div class="empty-state">Queue is empty. Enqueue a value to begin.</div>';
+        } else if (structure === "linked") {
+          stage.innerHTML = linked.length ? `<div class="node-box"><span style="color:#8f9aad;font-size:10px">HEAD</span><span class="node-arrow">→</span>${linked.map((value, i) => `<div class="node">${escapeHtml(value)}<small>${i === linked.length - 1 ? "NULL" : "next"}</small></div>${i < linked.length - 1 ? '<span class="node-arrow">→</span>' : ""}`).join("")}</div>` : '<div class="empty-state">List is empty. Insert a node to begin.</div>';
+        } else {
+          const root = buildTree();
+          if (!root) { stage.innerHTML = '<div class="empty-state">Tree is empty. Insert a value to begin.</div>'; }
+          else stage.innerHTML = renderTreeSvg(root);
+        }
+        $("#vizSubtitle").textContent = `${configs[structure].title.replace(" playground", "")} · ${structure === "tree" ? `${treeValues.length} nodes` : structure === "linked" ? `${linked.length} nodes` : `${structure === "stack" ? stack.length : queue.length} elements`}`;
+        renderStats();
+      }
+
+      function buildTree() {
+        let root = null;
+        for (const value of treeValues) {
+          if (!root) { root = { value, left: null, right: null }; continue; }
+          let node = root;
+          while (true) {
+            const side = value < node.value ? "left" : "right";
+            if (!node[side]) { node[side] = { value, left: null, right: null }; break; }
+            node = node[side];
+          }
+        }
+        return root;
+      }
+
+      function treeHeight(node) {
+        return node ? 1 + Math.max(treeHeight(node.left), treeHeight(node.right)) : 0;
+      }
+
+      function renderTreeSvg(root) {
+        const width = Math.max(430, treeValues.length * 52);
+        const height = 275;
+        const nodes = [], edges = [];
+        function walk(node, x, y, spread) {
+          if (!node) return;
+          nodes.push({ ...node, x, y });
+          if (node.left) { edges.push({ x1: x, y1: y + 15, x2: x - spread, y2: y + 65 }); walk(node.left, x - spread, y + 65, spread / 2); }
+          if (node.right) { edges.push({ x1: x, y1: y + 15, x2: x + spread, y2: y + 65 }); walk(node.right, x + spread, y + 65, spread / 2); }
+        }
+        walk(root, width / 2, 31, width / 4);
+        const allNodes = nodes.map((node) => `<g class="tree-node ${treeFound === node.value ? "found" : ""}"><circle cx="${node.x}" cy="${node.y}" r="16"></circle><text x="${node.x}" y="${node.y}">${escapeHtml(node.value)}</text></g>`).join("");
+        const allEdges = edges.map((edge) => `<line class="tree-edge" x1="${edge.x1}" y1="${edge.y1}" x2="${edge.x2}" y2="${edge.y2}"></line>`).join("");
+        return `<svg class="tree-svg" viewBox="0 0 ${width} ${height}" role="img" aria-label="Binary search tree visualization">${allEdges}${allNodes}</svg>`;
+      }
+
+      function render() {
+        const cfg = configs[structure];
+        $("#crumb").textContent = structure === "tree" ? "Binary search tree" : structure === "linked" ? "Linked list" : structure[0].toUpperCase() + structure.slice(1);
+        $("#pageTitle").textContent = cfg.title;
+        $("#pageSubtitle").textContent = cfg.subtitle;
+        $("#eyebrow").textContent = cfg.eyebrow;
+        $("#controlTitle").textContent = cfg.control;
+        $("#controlSubtitle").textContent = cfg.description;
+        $("#arrayTabs").classList.toggle("hidden", structure !== "array");
+        $("#arrayCanvas").classList.toggle("hidden", structure !== "array");
+        $("#structureStage").classList.toggle("hidden", structure === "array");
+        $("#shuffleBtn").classList.toggle("hidden", structure !== "array");
+        $("#newValueBtn").classList.toggle("hidden", structure !== "array");
+        $("#arrayStage").classList.toggle("hidden", structure === "array" && mode === "searching" && algorithm);
+        $$(".nav-item").forEach((item) => item.classList.toggle("active", item.dataset.structure === structure));
+        renderComplexity();
+        renderControls();
+        if (structure === "array") renderArray();
+        else renderStructure();
+      }
+
+      function setMode(nextMode) {
+        stopAnimation();
+        algorithm = null;
+        frames = [];
+        frameIndex = -1;
+        mode = nextMode;
+        $$(".mode-tab").forEach((tab) => tab.classList.toggle("active", tab.dataset.mode === mode));
+        $("#arrayStage").classList.remove("hidden");
+        renderControls();
+        renderArray();
+        $("#modeBadge").textContent = mode === "operations" ? "MANUAL" : "READY";
+      }
+
+      function readNumber(id) {
+        const input = document.getElementById(id);
+        if (!input || input.value.trim() === "") { notify("Enter a number first."); return null; }
+        const value = Number(input.value);
+        if (!Number.isFinite(value)) { notify("Please enter a valid number."); return null; }
+        return value;
+      }
+
+      function attachControlEvents() {
+        if (structure === "array" && algorithm) {
+          $("#playBtn")?.addEventListener("click", playAnimation);
+          $("#stepBtn")?.addEventListener("click", () => { if (timer) stopAnimation(); stepForward(); });
+          $("#stepBackBtn")?.addEventListener("click", () => {
+            if (timer) stopAnimation();
+            if (frameIndex > 0) { frameIndex--; updateFrame(); }
+          });
+          $("#stopBtn")?.addEventListener("click", () => {
+            stopAnimation(); algorithm = null; frames = []; frameIndex = -1; renderControls(); renderArray(); $("#modeBadge").textContent = "READY";
+          });
+          $("#speedRange")?.addEventListener("input", (event) => {
+            delay = 1100 - Number(event.target.value) * 100;
+            $("#speedLabel").textContent = `${(1000 / delay).toFixed(1)}×`;
+            if (timer) { stopAnimation(); playAnimation(); }
+          });
+          return;
+        }
+        if (structure === "array") {
+          $("#insertBtn")?.addEventListener("click", () => {
+            const value = readNumber("insertValue"), index = readNumber("insertIndex");
+            if (value === null || index === null) return;
+            if (!Number.isInteger(index) || index < 0 || index > array.length) { notify(`Index must be between 0 and ${array.length}.`); return; }
+            array.splice(index, 0, value);
+            renderArray({ inserted: [index] }); addLog(`Inserted ${value} at index ${index}.`); notify(`Inserted ${value} at index ${index}.`);
+          });
+          $("#deleteBtn")?.addEventListener("click", () => {
+            const index = readNumber("deleteIndex");
+            if (index === null) return;
+            if (!Number.isInteger(index) || index < 0 || index >= array.length) { notify("Choose an existing array index to delete."); return; }
+            const [removed] = array.splice(index, 1);
+            renderArray(); addLog(`Deleted ${removed} from index ${index}.`); notify(`Deleted ${removed}.`);
+          });
+          $("#runSort")?.addEventListener("click", () => {
+            if (array.length < 2) { notify("Add at least two values to sort."); return; }
+            const type = $("#sortAlgorithm").value;
+            beginAnimation(createSortFrames(type), type, `${type[0].toUpperCase() + type.slice(1)} sort`);
+          });
+          $("#randomizeSmall")?.addEventListener("click", randomizeArray);
+          $("#runSearch")?.addEventListener("click", () => {
+            const target = readNumber("searchValue");
+            if (target === null) return;
+            if (!array.length) { notify("Add values before searching."); return; }
+            const type = $("#searchAlgorithm").value;
+            beginAnimation(createSearchFrames(type, target), type, `${type === "binary" ? "Binary" : "Linear"} search for ${target}`);
+            if (type === "binary") $("#controlNote").textContent = "Binary search uses a sorted copy; your original array stays unchanged.";
+          });
+          return;
+        }
+        if (structure === "stack" || structure === "queue") {
+          const list = structure === "stack" ? stack : queue;
+          const label = structure === "stack" ? "Stack" : "Queue";
+          $("#addStructure")?.addEventListener("click", () => {
+            const value = readNumber("structureValue"); if (value === null) return;
+            list.push(value); renderStructure(); addLog(`${structure === "stack" ? "Pushed" : "Enqueued"} ${value}.`); notify(`${label}: added ${value}.`);
+          });
+          $("#removeStructure")?.addEventListener("click", () => {
+            if (!list.length) { notify(`${label} is empty.`); return; }
+            const value = structure === "stack" ? list.pop() : list.shift();
+            renderStructure(); addLog(`${structure === "stack" ? "Popped" : "Dequeued"} ${value}.`); notify(`${label}: removed ${value}.`);
+          });
+          $("#peekStructure")?.addEventListener("click", () => {
+            if (!list.length) { notify(`${label} is empty.`); return; }
+            const value = structure === "stack" ? list[list.length - 1] : list[0];
+            addLog(`${structure === "stack" ? "Peeked at top" : "Viewed front"}: ${value}.`); notify(`${structure === "stack" ? "Top" : "Front"} value: ${value}.`);
+          });
+          return;
+        }
+        if (structure === "linked") {
+          $("#addStructure")?.addEventListener("click", () => {
+            const value = readNumber("structureValue"), index = readNumber("nodeIndex");
+            if (value === null || index === null) return;
+            if (!Number.isInteger(index) || index < 0 || index > linked.length) { notify(`Index must be between 0 and ${linked.length}.`); return; }
+            linked.splice(index, 0, value); renderStructure(); addLog(`Inserted node ${value} at index ${index}.`); notify("Node inserted.");
+          });
+          $("#removeStructure")?.addEventListener("click", () => {
+            const index = readNumber("nodeIndex");
+            if (index === null) return;
+            if (!Number.isInteger(index) || index < 0 || index >= linked.length) { notify("Enter a valid node index to delete."); return; }
+            const value = linked.splice(index, 1)[0]; renderStructure(); addLog(`Deleted node ${value} at index ${index}.`); notify("Node deleted.");
+          });
+          $("#reverseList")?.addEventListener("click", () => { linked.reverse(); renderStructure(); addLog("Reversed the linked list."); notify("Linked list reversed."); });
+          return;
+        }
+        if (structure === "tree") {
+          $("#addStructure")?.addEventListener("click", () => {
+            const value = readNumber("structureValue"); if (value === null) return;
+            if (treeValues.includes(value)) { notify(`${value} is already in the tree.`); return; }
+            treeValues.push(value); treeFound = null; renderStructure(); addLog(`Inserted ${value} into the binary search tree.`); notify(`${value} inserted into the tree.`);
+          });
+          $("#removeStructure")?.addEventListener("click", () => {
+            if (!treeValues.length) { notify("Tree is empty."); return; }
+            const root = treeValues[0]; treeValues = treeValues.slice(1); treeFound = null;
+            renderStructure(); addLog(`Removed root value ${root}; remaining values were reinserted.`); notify(`Removed root value ${root}.`);
+          });
+          $("#traverseTree")?.addEventListener("click", () => {
+            const values = [];
+            const walk = (node) => { if (!node) return; walk(node.left); values.push(node.value); walk(node.right); };
+            walk(buildTree()); addLog(`In-order traversal: ${values.join(" → ")}.`); notify(`In-order: ${values.join(" → ")}`);
+          });
+          $("#searchTree")?.addEventListener("click", () => {
+            const value = readNumber("treeSearch"); if (value === null) return;
+            let node = buildTree(), found = false;
+            while (node) {
+              if (value === node.value) { found = true; break; }
+              node = value < node.value ? node.left : node.right;
+            }
+            treeFound = found ? value : null; renderStructure();
+            addLog(found ? `Found ${value} in the tree.` : `${value} is not in the tree.`);
+            notify(found ? `Found ${value}.` : `${value} is not in the tree.`);
+          });
+        }
+      }
+
+      function randomizeArray() {
+        stopAnimation(); algorithm = null; frames = []; frameIndex = -1;
+        array = Array.from({ length: 8 }, () => Math.floor(Math.random() * 90) + 10);
+        if (structure === "array") { renderControls(); renderArray(); }
+        addLog("Generated a new random array.");
+        notify("Array randomized.");
+      }
+
+      function resetCurrent() {
+        stopAnimation(); algorithm = null; frames = []; frameIndex = -1;
+        if (structure === "array") { array = [...initialArray]; mode = "operations"; $$(".mode-tab").forEach((tab) => tab.classList.toggle("active", tab.dataset.mode === mode)); }
+        if (structure === "stack") stack = [14, 27, 38];
+        if (structure === "queue") queue = [12, 24, 36];
+        if (structure === "linked") linked = [8, 17, 23, 41];
+        if (structure === "tree") { treeValues = [42, 21, 68, 11, 32, 57, 84]; treeFound = null; }
+        logEntries = []; renderLog(); render(); notify("Structure reset to its starting state.");
+      }
+
+      $$(".nav-item").forEach((item) => item.addEventListener("click", () => {
+        stopAnimation(); algorithm = null; frames = []; frameIndex = -1;
+        structure = item.dataset.structure; mode = "operations"; treeFound = null; logEntries = []; renderLog(); render();
+      }));
+      $$(".mode-tab").forEach((tab) => tab.addEventListener("click", () => setMode(tab.dataset.mode)));
+      $("#shuffleBtn").addEventListener("click", randomizeArray);
+      $("#newValueBtn").addEventListener("click", () => {
+        const value = Math.floor(Math.random() * 90) + 10;
+        array.push(value); renderArray({ inserted: [array.length - 1] }); addLog(`Added ${value} at index ${array.length - 1}.`); notify(`Added ${value} to the array.`);
+      });
+      $("#resetAll").addEventListener("click", resetCurrent);
+      $("#clearLog").addEventListener("click", () => { logEntries = []; renderLog(); });
+      document.addEventListener("keydown", (event) => {
+        if (event.code === "Space" && structure === "array" && algorithm && !["INPUT", "SELECT", "TEXTAREA"].includes(document.activeElement.tagName)) {
+          event.preventDefault(); playAnimation();
+        }
+        if (event.key === "Escape" && timer) stopAnimation();
+      });
+      renderLog();
+      render();
+    })();
+  </script>
+</body>
+</html>

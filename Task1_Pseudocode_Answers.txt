@@ -1,0 +1,183 @@
+Task 5: Search for a given element in a 1D array and return its position
+Algorithm Linear_Search(arr, n, key)
+    For i <- 0 up to n-1 do
+        If arr[i] = key then
+            Return i
+        End If
+    End For
+
+    Return -1
+End Algorithm
+
+Task 6: Reverse the elements of a 1D array
+Algorithm Reverse_Array(arr, n)
+    For i <- 0 up to (n/2)-1 do
+        temp <- arr[i]
+        arr[i] <- arr[n-1-i]
+        arr[n-1-i] <- temp
+    End For
+End Algorithm
+
+Task 7: Remove duplicate elements from an unsorted 1D array
+Algorithm Remove_Duplicates(arr, n)
+    resultSize <- 0
+    result[0..n-1] <- empty
+
+    For i <- 0 up to n-1 do
+        duplicate <- False
+
+        For j <- 0 up to resultSize-1 do
+            If arr[i] = result[j] then
+                duplicate <- True
+                Break
+            End If
+        End For
+
+        If duplicate = False then
+            result[resultSize] <- arr[i]
+            resultSize <- resultSize + 1
+        End If
+    End For
+
+    Print result[0..resultSize-1]
+End Algorithm
+
+Task 8: Find the second largest element in a 1D array without sorting the array
+Algorithm Second_Largest(arr, n)
+    If n < 2 then
+        Print "No second largest element"
+        Return
+    End If
+
+    first <- arr[0]
+    second <- arr[0]
+
+    For i <- 1 up to n-1 do
+        If arr[i] > first then
+            second <- first
+            first <- arr[i]
+        Else If arr[i] > second AND arr[i] <> first then
+            second <- arr[i]
+        End If
+    End For
+
+    If second = first then
+        Print "No second largest element"
+    Else
+        Print second
+    End If
+End Algorithm
+
+Task 9: Merge two sorted arrays into one sorted array
+Algorithm Merge_Sorted(arr1, n1, arr2, n2)
+    i <- 0
+    j <- 0
+    k <- 0
+    Create merged[n1 + n2]
+
+    While i < n1 AND j < n2 do
+        If arr1[i] <= arr2[j] then
+            merged[k] <- arr1[i]
+            i <- i + 1
+        Else
+            merged[k] <- arr2[j]
+            j <- j + 1
+        End If
+        k <- k + 1
+    End While
+
+    While i < n1 do
+        merged[k] <- arr1[i]
+        i <- i + 1
+        k <- k + 1
+    End While
+
+    While j < n2 do
+        merged[k] <- arr2[j]
+        j <- j + 1
+        k <- k + 1
+    End While
+
+    Print merged[0..k-1]
+End Algorithm
+
+Task 10: Count how many times each distinct element appears in an array
+Algorithm Count_Distinct(arr, n)
+    count <- 0
+    distinct[0..n-1] <- empty
+    frequency[0..n-1] <- empty
+
+    For i <- 0 up to n-1 do
+        found <- False
+
+        For j <- 0 up to count-1 do
+            If distinct[j] = arr[i] then
+                frequency[j] <- frequency[j] + 1
+                found <- True
+                Break
+            End If
+        End For
+
+        If found = False then
+            distinct[count] <- arr[i]
+            frequency[count] <- 1
+            count <- count + 1
+        End If
+    End For
+
+    For i <- 0 up to count-1 do
+        Print distinct[i], " appears ", frequency[i], " times"
+    End For
+End Algorithm
+
+Task 11: Move all 0s to the end of the array while maintaining the relative order of the non-zero elements
+Algorithm Move_Zeroes(arr, n)
+    temp[0..n-1] <- empty
+    index <- 0
+
+    For i <- 0 up to n-1 do
+        If arr[i] <> 0 then
+            temp[index] <- arr[i]
+            index <- index + 1
+        End If
+    End For
+
+    For i <- index up to n-1 do
+        temp[i] <- 0
+    End For
+
+    For i <- 0 up to n-1 do
+        arr[i] <- temp[i]
+    End For
+End Algorithm
+
+Task 12: Determine whether an element appears more than n/2 times in an array
+Algorithm Majority_Element(arr, n)
+    count <- 0
+    candidate <- 0
+
+    For i <- 0 up to n-1 do
+        If count = 0 then
+            candidate <- arr[i]
+            count <- 1
+        Else If arr[i] = candidate then
+            count <- count + 1
+        Else
+            count <- count - 1
+        End If
+    End For
+
+    frequency <- 0
+
+    For i <- 0 up to n-1 do
+        If arr[i] = candidate then
+            frequency <- frequency + 1
+        End If
+    End For
+
+    If frequency > n/2 then
+        Print "Majority element is: ", candidate
+    Else
+        Print "No majority element"
+    End If
+End Algorithm

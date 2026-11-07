@@ -1,0 +1,31 @@
+Algorithm Majority_Element(arr, n)
+
+count <- 0
+candidate <- 0
+
+For i <- 0 up to n-1 do
+   If count = 0 then
+      candidate <- arr[i]
+      count <- 1
+   Else If arr[i] = candidate then
+      count <- count + 1
+   Else
+      count <- count - 1
+   End If
+End For
+
+frequency <- 0
+
+For i <- 0 up to n-1 do
+   If arr[i] = candidate then
+      frequency <- frequency + 1
+   End If
+End For
+
+If frequency > n/2 then
+   Print "Majority element is: ", candidate
+Else
+   Print "No majority element"
+End If
+
+End Algorithm

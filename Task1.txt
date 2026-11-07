@@ -1,0 +1,15 @@
+generating pseudocode for Task1.cpp
+
+Algorithm Insert_Beginning(odd,even,arr)
+
+For i<-0 up to 5 do
+   If i mod 2 = 0 then
+      even <- even + 1
+   Else
+      odd <- odd + 1
+   End If
+End For
+Print "Odds: ", odd
+Print "Evens: ", even
+
+End Algorithm

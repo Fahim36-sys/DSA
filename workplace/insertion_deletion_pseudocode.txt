@@ -1,0 +1,26 @@
+Insertion Sort (Descending Order)
+
+INSERTION-SORT-DESCENDING(A, n)
+    FOR i <- 1 TO n - 1
+        key <- A[i]
+        j <- i - 1
+
+        WHILE j >= 0 AND A[j] < key
+            // For ascending order, use: WHILE j >= 0 AND A[j] > key
+            A[j + 1] <- A[j]
+            j <- j - 1
+
+        A[j + 1] <- key
+
+
+Delete an Element by Position (1-based)
+
+DELETE-AT-POSITION(A, n, position)
+    IF position < 1 OR position > n
+        RETURN "Invalid position"
+
+    FOR i <- position - 1 TO n - 2
+        A[i] <- A[i + 1]
+
+    n <- n - 1
+    RETURN n

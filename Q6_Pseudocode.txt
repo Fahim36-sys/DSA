@@ -1,0 +1,11 @@
+Algorithm Reverse_Array(arr, n)
+
+For i <- 0 up to (n/2)-1 do
+   temp <- arr[i]
+   arr[i] <- arr[n-1-i]
+   arr[n-1-i] <- temp
+End For
+
+Print arr
+
+End Algorithm

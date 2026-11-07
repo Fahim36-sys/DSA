@@ -1,0 +1,41 @@
+WHILE Infix is not empty DO
+    OP = next symbol from the left of Infix
+
+    IF OP is an operand THEN
+        Enqueue(OP)
+
+    ELSE IF OP is an operator THEN
+        IF OP == '(' THEN
+            Push(OP)
+
+        ELSE IF OP == ')' THEN
+            WHILE TopElement() != '(' DO
+                Enqueue(TopElement())
+                Pop()
+            END WHILE
+
+            Pop()   // Remove '('
+        ELSE
+            WHILE NOT Stack is empty AND Precedence(OP) <= Precedence(TopElement()) DO
+                Enqueue(TopElement())
+                Pop()
+            END WHILE
+
+            Push(OP)
+        END IF
+
+    ELSE
+        DISPLAY "Invalid expression"
+        STOP
+    END IF
+END WHILE
+
+WHILE Stack is not empty DO
+    IF TopElement() == '(' THEN
+        DISPLAY "Invalid expression"
+        STOP
+    END IF
+
+    Enqueue(TopElement())
+    Pop()
+END WHILE
